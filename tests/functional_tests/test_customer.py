@@ -47,3 +47,38 @@ def test_create_customer_with_duplicated_email():
 
     assert response.status_code == 422
     assert response.json() == expected_response
+
+
+def test_delete_customer():
+    payload = {
+        'name': 'Bob',
+        'email': 'bob@gmail.com',
+    }
+
+    response = requests.post(f'{get_api_url()}/customers', json=payload)
+    customer_id = response.json()['id']
+
+    response = requests.delete(f'{get_api_url()}/customers/{customer_id}')
+
+    assert response.status_code == 204
+    assert response.text == ''
+
+
+def test_delete_inexistent_customer():
+    payload = {
+        'name': 'Eric',
+        'email': 'eric@gmail.com',
+    }
+
+    response = requests.post(f'{get_api_url()}/customers', json=payload)
+    customer_id = response.json()['id']
+
+    requests.delete(f'{get_api_url()}/customers/{customer_id}')
+    response = requests.delete(f'{get_api_url()}/customers/{customer_id}')
+
+    assert response.status_code == 404
+    expected_response = {
+        'code': 'CUSTOMER_NOT_FOUND',
+        'message': f'Customer with id {customer_id} not found',
+    }
+    assert response.json() == expected_response

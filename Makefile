@@ -10,4 +10,7 @@ down:
 test: down up
 	docker-compose run --rm --no-deps --entrypoint=pytest web tests/
 
+logs:
+	docker-compose logs web
+
 all: down build up test
