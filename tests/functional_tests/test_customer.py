@@ -82,3 +82,24 @@ def test_delete_inexistent_customer():
         'message': f'Customer with id {customer_id} not found',
     }
     assert response.json() == expected_response
+
+
+def test_list_customers_returns_ok():
+    payload = {
+        'name': 'Marta',
+        'email': 'marta@gmail.com',
+    }
+
+    response = requests.post(f'{get_api_url()}/customers', json=payload)
+
+    customer_id = response.json()['id']
+
+    response = requests.get(f'{get_api_url()}/customers')
+    expec_customer_in_list = {
+        'id': customer_id,
+        'name': 'Marta',
+        'email': 'marta@gmail.com',
+    }
+
+    assert response.status_code == 200
+    assert expec_customer_in_list in response.json()
