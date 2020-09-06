@@ -44,6 +44,6 @@ class CustomerView(MethodView):
         return jsonify({}), 204
 
 
-class CustomerWithList(MethodView):
+class CustomerWishListView(MethodView):
     def post(self, customer_id, product_id):
         return jsonify({'wish_list': [product_id]}), 201
