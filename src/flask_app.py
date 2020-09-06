@@ -1,6 +1,7 @@
 from flask import Flask
 
 from src.customer.flask_endpoints import CustomersView
+from src.orm import metadata
 
 
 def create_app():
