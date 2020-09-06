@@ -7,7 +7,7 @@ up:
 down:
 	docker-compose down --remove-orphans
 
-test: up
+test: down up
 	docker-compose run --rm --no-deps --entrypoint=pytest web tests/
 
 all: down build up test
