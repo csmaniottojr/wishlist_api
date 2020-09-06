@@ -1,6 +1,4 @@
-import requests
-
-from src.config import get_api_url
+from tests.functional_tests import api
 
 
 def test_create_customer_returns_status_created():
@@ -9,7 +7,7 @@ def test_create_customer_returns_status_created():
         'email': 'cesarsjb@gmail.com',
     }
 
-    response = requests.post(f'{get_api_url()}/customers', json=payload)
+    response = api.create_customer(payload)
 
     response_json = response.json()
 
@@ -32,14 +30,14 @@ def test_create_customer_with_duplicated_email():
         'email': email,
     }
 
-    requests.post(f'{get_api_url()}/customers', json=payload)
+    api.create_customer(payload)
 
     payload = {
         'name': 'Alice',
         'email': email,
     }
 
-    response = requests.post(f'{get_api_url()}/customers', json=payload)
+    response = api.create_customer(payload)
     expected_response = {
         'code': 'CUSTOMER_ALREADY_REGISTERED',
         'message': f'Already exists a customer registered with email {email}',
@@ -50,31 +48,19 @@ def test_create_customer_with_duplicated_email():
 
 
 def test_delete_customer():
-    payload = {
-        'name': 'Bob',
-        'email': 'bob@gmail.com',
-    }
+    customer_id = api.create_customer_returning_id('Bob', 'bob@gmail.com')
 
-    response = requests.post(f'{get_api_url()}/customers', json=payload)
-    customer_id = response.json()['id']
-
-    response = requests.delete(f'{get_api_url()}/customers/{customer_id}')
+    response = api.delete_customer(customer_id)
 
     assert response.status_code == 204
     assert response.text == ''
 
 
 def test_delete_inexistent_customer():
-    payload = {
-        'name': 'Eric',
-        'email': 'eric@gmail.com',
-    }
+    customer_id = api.create_customer_returning_id('Eric', 'eric@gmail.com')
 
-    response = requests.post(f'{get_api_url()}/customers', json=payload)
-    customer_id = response.json()['id']
-
-    requests.delete(f'{get_api_url()}/customers/{customer_id}')
-    response = requests.delete(f'{get_api_url()}/customers/{customer_id}')
+    api.delete_customer(customer_id)
+    response = api.delete_customer(customer_id)
 
     assert response.status_code == 404
     expected_response = {
@@ -85,16 +71,9 @@ def test_delete_inexistent_customer():
 
 
 def test_list_customers_returns_ok():
-    payload = {
-        'name': 'Marta',
-        'email': 'marta@gmail.com',
-    }
+    customer_id = api.create_customer_returning_id('Marta', 'marta@gmail.com')
 
-    response = requests.post(f'{get_api_url()}/customers', json=payload)
-
-    customer_id = response.json()['id']
-
-    response = requests.get(f'{get_api_url()}/customers')
+    response = api.list_customers()
     expec_customer_in_list = {
         'id': customer_id,
         'name': 'Marta',
@@ -105,19 +84,11 @@ def test_list_customers_returns_ok():
     assert expec_customer_in_list in response.json()
 
 
-def test_add_product_to_wishlist():
+def test_add_product_to_wishlist_returns_created():
+    customer_id = api.create_customer_returning_id('John', 'john@gmail.com')
+
     product_id = '1bf0f365-fbdd-4e21-9786-da459d78dd1f'
-
-    payload = {
-        'name': 'John',
-        'email': 'john@gmail.com',
-    }
-
-    response = requests.post(f'{get_api_url()}/customers', json=payload)
-    customer_id = response.json()['id']
-
-    wish_list_url = f'{get_api_url()}/customers/{customer_id}/wish_list/{product_id}'
-    response = requests.post(wish_list_url, json=payload)
+    response = api.add_product_to_wish_list(customer_id, product_id)
 
     assert response.status_code == 201
     assert product_id in response.json()['wish_list']
