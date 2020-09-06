@@ -103,3 +103,21 @@ def test_list_customers_returns_ok():
 
     assert response.status_code == 200
     assert expec_customer_in_list in response.json()
+
+
+def test_add_product_to_wishlist():
+    product_id = '1bf0f365-fbdd-4e21-9786-da459d78dd1f'
+
+    payload = {
+        'name': 'John',
+        'email': 'john@gmail.com',
+    }
+
+    response = requests.post(f'{get_api_url()}/customers', json=payload)
+    customer_id = response.json()['id']
+
+    wish_list_url = f'{get_api_url()}/customers/{customer_id}/wish_list/{product_id}'
+    response = requests.post(wish_list_url, json=payload)
+
+    assert response.status_code == 201
+    assert product_id in response.json()['wish_list']
