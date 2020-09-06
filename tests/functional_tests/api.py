@@ -20,6 +20,6 @@ def list_customers():
     return requests.get(f'{get_api_url()}/customers')
 
 
-def add_product_to_wish_list(customer_id, product_id):
-    wish_list_url = f'{get_api_url()}/customers/{customer_id}/wish_list/{product_id}'
+def add_product_to_wishlist(customer_id, product_id):
+    wish_list_url = f'{get_api_url()}/customers/{customer_id}/wishlist/{product_id}'
     return requests.post(wish_list_url)

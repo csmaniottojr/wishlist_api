@@ -5,7 +5,7 @@ from flask import Flask
 from src.customer.flask_endpoints import (
     CustomersView,
     CustomerView,
-    CustomerWishListView,
+    CustomerWishlistView,
 )
 from src.orm import metadata
 
@@ -26,8 +26,8 @@ def register_urls(app):
         ('/customers', CustomersView),
         ('/customers/<int:id>', CustomerView),
         (
-            '/customers/<int:customer_id>/wish_list/<string:product_id>',
-            CustomerWishListView,
+            '/customers/<int:customer_id>/wishlist/<string:product_id>',
+            CustomerWishlistView,
         ),
     )
     for url, view_cls in url_view_cls:

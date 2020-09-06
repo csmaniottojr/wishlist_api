@@ -88,7 +88,7 @@ def test_add_product_to_wishlist_returns_created():
     customer_id = api.create_customer_returning_id('John', 'john@gmail.com')
 
     product_id = '1bf0f365-fbdd-4e21-9786-da459d78dd1f'
-    response = api.add_product_to_wish_list(customer_id, product_id)
+    response = api.add_product_to_wishlist(customer_id, product_id)
 
     assert response.status_code == 201
     assert product_id in response.json()['wish_list']
