@@ -1,5 +1,7 @@
 import requests
 
+from src.config import get_api_url
+
 
 def test_create_customer():
     payload = {
@@ -7,13 +9,17 @@ def test_create_customer():
         'email': 'cesarsjb@gmail.com',
     }
 
-    response = requests.post('http://localhost:5000/customers', data=payload)
+    response = requests.post(f'{get_api_url()}/customers', json=payload)
+
+    response_json = response.json()
 
     expected_response = {
-        'id': 1,
         'name': 'Cesar Smaniotto Jr',
         'email': 'cesarsjb@gmail.com',
     }
 
-    assert response.json() == expected_response
+    assert 'id' in response_json
+    response_json.pop('id')
+
+    assert response_json == expected_response
     assert response.status_code == 201

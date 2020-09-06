@@ -2,7 +2,8 @@ import os
 import sys
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config, pool
+from sqlalchemy import create_engine, engine_from_config, pool
+from tenacity import retry, stop_after_delay
 
 from alembic import context
 
@@ -11,11 +12,18 @@ from alembic import context
 config = context.config
 
 
+@retry(stop=stop_after_delay(10))
+def wait_for_postgres_to_come_up(db_url):
+    engine = create_engine(db_url)
+    return engine.connect()
+
+
 def set_sqlalchemy_url():
     MODEL_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..')
     sys.path.append(MODEL_PATH)
     from src.config import get_db_url
 
+    wait_for_postgres_to_come_up(get_db_url())
     config.set_main_option('sqlalchemy.url', get_db_url())
 
 
