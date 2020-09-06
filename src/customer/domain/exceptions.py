@@ -1,0 +1,2 @@
+class CustomerAlreadyRegistered(Exception):
+    pass
