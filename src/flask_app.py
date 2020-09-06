@@ -1,6 +1,6 @@
 import logging
 
-from flask import Flask, jsonify
+from flask import Flask
 
 from src.customer.flask_endpoints import CustomersView, CustomerView, CustomerWithList
 from src.orm import metadata
