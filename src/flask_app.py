@@ -3,12 +3,14 @@ import logging
 from flask import Flask
 
 from src.customer.entrypoints.flask import customer, customer_wishlist, customers
-from src.orm import metadata
+from src.orm import start_mappers
 
 
 def create_app():
     app = Flask(__name__)
     app.config['DEBUG'] = True
+
+    start_mappers()
 
     register_urls(app)
 

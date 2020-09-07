@@ -21,10 +21,14 @@ wished_product = Table(
     Column('product_id', String(36)),
 )
 
-mapper(
-    entities.Customer,
-    customer,
-    properties={'wishlist': relationship(entities.WishedProduct, collection_class=set)},
-)
 
-mapper(entities.WishedProduct, wished_product)
+def start_mappers():
+    mapper(
+        entities.Customer,
+        customer,
+        properties={
+            'wishlist': relationship(entities.WishedProduct, collection_class=set)
+        },
+    )
+
+    mapper(entities.WishedProduct, wished_product)
