@@ -2,11 +2,7 @@ import logging
 
 from flask import Flask
 
-from src.customer.flask_endpoints import (
-    CustomersView,
-    CustomerView,
-    CustomerWishlistView,
-)
+from src.customer.entrypoints.flask import customer, customer_wishlist, customers
 from src.orm import metadata
 
 
@@ -23,11 +19,11 @@ def create_app():
 
 def register_urls(app):
     url_view_cls = (
-        ('/customers', CustomersView),
-        ('/customers/<int:id>', CustomerView),
+        ('/customers', customers.CustomersView),
+        ('/customers/<int:id>', customer.CustomerView),
         (
             '/customers/<int:customer_id>/wishlist/<string:product_id>',
-            CustomerWishlistView,
+            customer_wishlist.CustomerWishlistView,
         ),
     )
     for url, view_cls in url_view_cls:
