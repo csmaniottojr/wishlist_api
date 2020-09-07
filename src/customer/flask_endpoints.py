@@ -1,7 +1,9 @@
 from flask import jsonify, request
 from flask.views import MethodView
 
+from src.customer import product_api
 from src.customer.domain import exceptions
+from src.customer.domain.services.add_product_to_wishlist import AddProductToWishlist
 from src.customer.domain.services.create_customer import CreateCustomer
 from src.customer.domain.services.delete_customer import DeleteCustomer
 from src.customer.queries.list_customers import list_customers
@@ -46,4 +48,22 @@ class CustomerView(MethodView):
 
 class CustomerWishlistView(MethodView):
     def post(self, customer_id, product_id):
-        return jsonify({'wish_list': [product_id]}), 201
+        session = session_factory()
+        repository = SQLACustomerRepository(session)
+        service = AddProductToWishlist(repository, product_api)
+        try:
+            response = service({'customer_id': customer_id, 'product_id': product_id})
+        except exceptions.ProductAlreadAddedToWishlist:
+            error = {
+                'code': 'PRODUCT_ALREADY_ADDED',
+                'message': f'Product with id {product_id} already added to wishlist',
+            }
+            return jsonify(error), 422
+        except exceptions.ProductNotFound:
+            error = {
+                'code': 'PRODUCT_NOT_FOUND',
+                'message': f'Product with id {product_id} not found',
+            }
+            return jsonify(error), 404
+
+        return jsonify(response), 201

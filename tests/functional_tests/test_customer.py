@@ -88,7 +88,45 @@ def test_add_product_to_wishlist_returns_created():
     customer_id = api.create_customer_returning_id('John', 'john@gmail.com')
 
     product_id = '1bf0f365-fbdd-4e21-9786-da459d78dd1f'
-    response = api.add_product_to_wishlist(customer_id, product_id)
+    other_product_id = '6a512e6c-6627-d286-5d18-583558359ab6'
+
+    api.add_product_to_wishlist(customer_id, product_id)
+    response = api.add_product_to_wishlist(customer_id, other_product_id)
 
     assert response.status_code == 201
-    assert product_id in response.json()['wish_list']
+    assert product_id in response.json()['wishlist']
+    assert other_product_id in response.json()['wishlist']
+
+
+def test_same_product_cannot_added_twice_to_wishlist():
+    customer_id = api.create_customer_returning_id('Mary', 'mary@gmail.com')
+
+    product_id = '1bf0f365-fbdd-4e21-9786-da459d78dd1f'
+
+    api.add_product_to_wishlist(customer_id, product_id)
+    response = api.add_product_to_wishlist(customer_id, product_id)
+
+    expected_response = {
+        'code': 'PRODUCT_ALREADY_ADDED',
+        'message': f'Product with id {product_id} already added to wishlist',
+    }
+
+    assert response.status_code == 422
+    assert response.json() == expected_response
+
+
+def test_cannot_add_inexistent_product_to_wishlist():
+    customer_id = api.create_customer_returning_id('Joe', 'joe@gmail.com')
+
+    product_id = '5ddbc2b9-1186-4c38-b65e-ce8949ee91b5'
+
+    api.add_product_to_wishlist(customer_id, product_id)
+    response = api.add_product_to_wishlist(customer_id, product_id)
+
+    expected_response = {
+        'code': 'PRODUCT_NOT_FOUND',
+        'message': f'Product with id {product_id} not found',
+    }
+
+    assert response.status_code == 404
+    assert response.json() == expected_response

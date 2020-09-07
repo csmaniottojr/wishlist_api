@@ -10,15 +10,10 @@ repos:
     -  id: pretty-format-json
        args: [--autofix, --no-sort-keys]
     -  id: requirements-txt-fixer
--   repo: https://github.com/asottile/seed-isort-config
-    rev: v1.7.0
+-   repo: https://github.com/pycqa/isort
+    rev: 5.3.0
     hooks:
-    -   id: seed-isort-config
-        args: [--application-directories, "src:. tests:."]
--   repo: https://github.com/pre-commit/mirrors-isort
-    rev: v4.3.16
-    hooks:
-    - id: isort
+      - id: isort
 -   repo: local
     hooks:
     -   id: flake8
