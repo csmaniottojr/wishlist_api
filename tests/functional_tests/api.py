@@ -23,3 +23,8 @@ def list_customers():
 def add_product_to_wishlist(customer_id, product_id):
     wish_list_url = f'{get_api_url()}/customers/{customer_id}/wishlist/{product_id}'
     return requests.post(wish_list_url)
+
+
+def remove_product_from_wishlist(customer_id, product_id):
+    wish_list_url = f'{get_api_url()}/customers/{customer_id}/wishlist/{product_id}'
+    return requests.delete(wish_list_url)

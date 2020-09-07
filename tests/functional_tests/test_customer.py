@@ -130,3 +130,18 @@ def test_cannot_add_inexistent_product_to_wishlist():
 
     assert response.status_code == 404
     assert response.json() == expected_response
+
+
+def test_remove_product_to_wishlist_returns_no_content():
+    customer_id = api.create_customer_returning_id('Ana', 'ana@gmail.com')
+
+    product_id = '1bf0f365-fbdd-4e21-9786-da459d78dd1f'
+    other_product_id = '6a512e6c-6627-d286-5d18-583558359ab6'
+
+    api.add_product_to_wishlist(customer_id, product_id)
+    api.add_product_to_wishlist(customer_id, other_product_id)
+    response = api.remove_product_from_wishlist(customer_id, product_id)
+
+    assert response.status_code == 200
+    assert product_id not in response.json()['wishlist']
+    assert other_product_id in response.json()['wishlist']

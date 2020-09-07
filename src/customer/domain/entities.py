@@ -21,3 +21,7 @@ class Customer:
         if wished_product in self.wishlist:
             raise exceptions.ProductAlreadAddedToWishlist
         self.wishlist.add(wished_product)
+
+    def remove_product_from_wishlist(self, product_id):
+        wished_product = WishedProduct(product_id=product_id)
+        self.wishlist.remove(wished_product)
