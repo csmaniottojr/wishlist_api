@@ -1,4 +1,12 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import Set
+
+from src.customer.domain import exceptions
+
+
+@dataclass(unsafe_hash=True)
+class WishedProduct:
+    product_id: str
 
 
 @dataclass
@@ -6,3 +14,10 @@ class Customer:
     id: int
     name: str
     email: str
+    wishlist: Set[WishedProduct] = field(default_factory=set)
+
+    def add_to_wishlist(self, product_id):
+        wished_product = WishedProduct(product_id=product_id)
+        if wished_product in self.wishlist:
+            raise exceptions.ProductAlreadAddedToWishlist
+        self.wishlist.add(wished_product)

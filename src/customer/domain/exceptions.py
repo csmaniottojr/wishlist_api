@@ -4,3 +4,11 @@ class CustomerAlreadyRegistered(Exception):
 
 class CustomerNotFound(Exception):
     pass
+
+
+class ProductAlreadAddedToWishlist(Exception):
+    pass
+
+
+class ProductNotFound(Exception):
+    pass
