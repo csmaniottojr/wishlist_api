@@ -145,3 +145,28 @@ def test_remove_product_to_wishlist_returns_no_content():
     assert response.status_code == 200
     assert product_id not in response.json()['wishlist']
     assert other_product_id in response.json()['wishlist']
+
+
+def test_get_customer_details():
+    customer_id = api.create_customer_returning_id('Eve', 'eve@gmail.com')
+
+    product_id = '1bf0f365-fbdd-4e21-9786-da459d78dd1f'
+    other_product_id = '6a512e6c-6627-d286-5d18-583558359ab6'
+
+    api.add_product_to_wishlist(customer_id, product_id)
+    api.add_product_to_wishlist(customer_id, other_product_id)
+
+    expected_response = {
+        'id': customer_id,
+        'name': 'Eve',
+        'email': 'eve@gmail.com',
+        'wishlist': [
+            '1bf0f365-fbdd-4e21-9786-da459d78dd1f',
+            '6a512e6c-6627-d286-5d18-583558359ab6',
+        ],
+    }
+
+    response = api.get_customer(customer_id)
+
+    assert response.status_code == 200
+    assert response.json() == expected_response
