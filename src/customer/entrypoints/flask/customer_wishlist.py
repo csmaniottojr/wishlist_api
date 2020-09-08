@@ -1,7 +1,6 @@
 from http import HTTPStatus
 
-from flask import jsonify
-from flask.views import MethodView
+from flask_apispec.views import MethodResource
 
 from src.customer import product_api
 from src.customer.domain import exceptions
@@ -13,7 +12,7 @@ from src.customer.repository import SQLACustomerRepository
 from src.db import session_factory
 
 
-class CustomerWishlistView(MethodView):
+class CustomerWishlistView(MethodResource):
     def post(self, customer_id, product_id):
         session = session_factory()
         repository = SQLACustomerRepository(session)
@@ -25,15 +24,15 @@ class CustomerWishlistView(MethodView):
                 'code': 'PRODUCT_ALREADY_ADDED',
                 'message': f'Product with id {product_id} already added to wishlist',
             }
-            return jsonify(error), HTTPStatus.UNPROCESSABLE_ENTITY
+            return error, HTTPStatus.UNPROCESSABLE_ENTITY
         except exceptions.ProductNotFound:
             error = {
                 'code': 'PRODUCT_NOT_FOUND',
                 'message': f'Product with id {product_id} not found',
             }
-            return jsonify(error), HTTPStatus.NOT_FOUND
+            return error, HTTPStatus.NOT_FOUND
 
-        return jsonify(response), HTTPStatus.CREATED
+        return response, HTTPStatus.CREATED
 
     def delete(self, product_id, customer_id):
         session = session_factory()

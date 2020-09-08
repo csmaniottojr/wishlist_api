@@ -1,7 +1,6 @@
 from http import HTTPStatus
 
-from flask import jsonify
-from flask.views import MethodView
+from flask_apispec.views import MethodResource
 
 from src.customer.domain import exceptions
 from src.customer.domain.services.delete_customer import DeleteCustomer
@@ -10,10 +9,10 @@ from src.customer.repository import SQLACustomerRepository
 from src.db import session_factory
 
 
-class CustomerView(MethodView):
+class CustomerView(MethodResource):
     def get(self, id):
         session = session_factory()
-        return jsonify(get_customer(session, id))
+        return get_customer(session, id)
 
     def delete(self, id):
         session = session_factory()
@@ -25,5 +24,5 @@ class CustomerView(MethodView):
                 'code': 'CUSTOMER_NOT_FOUND',
                 'message': f'Customer with id {id} not found',
             }
-            return jsonify(error), HTTPStatus.NOT_FOUND
+            return error, HTTPStatus.NOT_FOUND
         return '', HTTPStatus.NO_CONTENT
