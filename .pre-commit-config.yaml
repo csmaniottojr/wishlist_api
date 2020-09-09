@@ -7,8 +7,6 @@ repos:
     rev: v3.2.0
     hooks:
     -  id: double-quote-string-fixer
-    -  id: pretty-format-json
-       args: [--autofix, --no-sort-keys]
     -  id: requirements-txt-fixer
 -   repo: https://github.com/pycqa/isort
     rev: 5.3.0

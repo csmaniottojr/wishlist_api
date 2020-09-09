@@ -13,7 +13,13 @@ class FakeCustomerRepository:
             (customer for customer in self.customers if customer.email == email), None
         )
 
-    def has_customer_with_email(self, email):
+    def has_customer_with_email(self, email, customer_id=None):
+        if customer_id:
+            return any(
+                customer
+                for customer in self.customers
+                if customer.email == email and customer.id != customer_id
+            )
         return any(customer for customer in self.customers if customer.email == email)
 
     def save(self, customer):

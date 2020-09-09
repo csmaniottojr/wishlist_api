@@ -32,3 +32,7 @@ def remove_product_from_wishlist(customer_id, product_id):
 
 def get_customer(customer_id):
     return requests.get(f'{get_api_url()}/customers/{customer_id}')
+
+
+def update_customer(customer_id, payload):
+    return requests.put(f'{get_api_url()}/customers/{customer_id}', json=payload)

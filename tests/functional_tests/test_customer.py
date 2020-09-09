@@ -206,3 +206,72 @@ def test_get_details_from_inexistent_customer():
 
     assert response.status_code == 404
     assert response.json() == expected_response
+
+
+def test_update_customer_with_success():
+    customer_id = api.create_customer_returning_id('Harry', 'harry@gmail.com')
+    response = api.update_customer(
+        customer_id, {'name': 'Harry C', 'email': 'harry.c@gmail.com'}
+    )
+
+    expected_response = {
+        'id': customer_id,
+        'name': 'Harry C',
+        'email': 'harry.c@gmail.com',
+    }
+
+    assert response.status_code == 200
+    assert response.json() == expected_response
+
+
+def test_update_customer_inexistent():
+    customer_id = api.create_customer_returning_id('Cris', 'cris@gmail.com')
+    api.delete_customer(customer_id)
+    response = api.update_customer(
+        customer_id, {'name': 'Cristine', 'email': 'cris@gmail.com'}
+    )
+
+    expected_response = {
+        'code': 'CUSTOMER_NOT_FOUND',
+        'message': f'Customer with id {customer_id} not found',
+    }
+
+    assert response.status_code == 404
+    assert response.json() == expected_response
+
+
+def test_update_customer_with_email_of_another_customer():
+    email = 'paula@gmail.com'
+    customer_id = api.create_customer_returning_id('Dana', 'dana@gmail.com')
+    api.create_customer_returning_id('Paula', email)
+
+    response = api.update_customer(
+        customer_id, {'name': 'Dana', 'email': 'paula@gmail.com'}
+    )
+
+    expected_response = {
+        'code': 'CUSTOMER_ALREADY_REGISTERED',
+        'message': f'Already exists a customer registered with email {email}',
+    }
+
+    assert response.status_code == 422
+    assert response.json() == expected_response
+
+
+def test_update_customer_with_invalid_input():
+    customer_id = api.create_customer_returning_id('Lucas', 'lucas@gmail.com')
+
+    response = api.update_customer(
+        customer_id, {'name': 'Dana', 'email': 'paula@gmailcom'}
+    )
+
+    response_json = response.json()
+
+    expected_response = {
+        'code': 'VALIDATION_ERROR',
+        'errors': {'email': ['Not a valid email address.']},
+        'message': 'Validation error',
+    }
+
+    assert response_json == expected_response
+    assert response.status_code == 422

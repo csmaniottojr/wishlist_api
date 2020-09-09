@@ -16,6 +16,10 @@ class Customer:
     email: str
     wishlist: Set[WishedProduct] = field(default_factory=set)
 
+    def update(self, update_payload):
+        self.name = update_payload.get('name')
+        self.email = update_payload.get('email')
+
     def add_to_wishlist(self, product_id):
         wished_product = WishedProduct(product_id=product_id)
         if wished_product in self.wishlist:

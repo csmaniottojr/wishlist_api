@@ -23,6 +23,8 @@ def test_has_customer_with_email(sqla_memory_session):
     repo.save(customer2)
 
     assert repo.has_customer_with_email('alice@gmail.com')
+    assert not repo.has_customer_with_email('alice@gmail.com', 1)
+    assert repo.has_customer_with_email('alice@gmail.com', 2)
     assert not repo.has_customer_with_email('otheralice@gmail.com')
 
 
