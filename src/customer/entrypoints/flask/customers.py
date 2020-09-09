@@ -16,12 +16,13 @@ from src.customer.entrypoints.flask.response_utils import (
     create_response_error,
     create_validation_error,
 )
-from src.customer.queries.list_customers import list_customers
+from src.customer.queries.list_customers import ListCustomersResponse, list_customers
 from src.customer.repository import SQLACustomerRepository
 from src.db import session_factory
 
 
 class CustomersView(MethodResource):
+    @marshal_with(ListCustomersResponse(many=True), apply=False)
     def get(self):
         session = session_factory()
         return list_customers(session)
