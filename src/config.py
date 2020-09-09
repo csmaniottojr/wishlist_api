@@ -17,3 +17,8 @@ def get_db_url():
 def get_api_url():
     api_host = os.environ.get('API_HOST')
     return f'http://{api_host}:5000'
+
+
+PRODUCT_API_BASE_URL = os.environ.get(
+    'PRODUCT_API_BASE_URL', 'http://challenge-api.luizalabs.com'
+)

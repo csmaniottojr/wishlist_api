@@ -28,3 +28,4 @@ services:
       - POSTGRES_HOST=db
       - POSTGRES_PORT=5432
       - API_HOST=web
+      - PRODUCT_API_BASE_URL=http://challenge-api.luizalabs.com
