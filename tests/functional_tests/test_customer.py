@@ -190,3 +190,19 @@ def test_get_customer_details():
 
     assert response.status_code == 200
     assert response.json() == expected_response
+
+
+def test_get_details_from_inexistent_customer():
+    customer_id = api.create_customer_returning_id('Martin', 'martin@gmail.com')
+
+    api.delete_customer(customer_id)
+
+    expected_response = {
+        'code': 'CUSTOMER_NOT_FOUND',
+        'message': f'Customer with id {customer_id} not found',
+    }
+
+    response = api.get_customer(customer_id)
+
+    assert response.status_code == 404
+    assert response.json() == expected_response
