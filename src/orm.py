@@ -1,6 +1,7 @@
 from sqlalchemy import Column, ForeignKey, Integer, MetaData, String, Table
 from sqlalchemy.orm import mapper, relationship
 
+from src.auth.entities import User
 from src.customer.domain import entities
 
 metadata = MetaData()
@@ -21,6 +22,14 @@ wished_product = Table(
     Column('product_id', String(36)),
 )
 
+user = Table(
+    'user',
+    metadata,
+    Column('id', Integer, primary_key=True),
+    Column('email', String(100)),
+    Column('password', String(100)),
+)
+
 
 def start_mappers():
     mapper(
@@ -34,3 +43,4 @@ def start_mappers():
     )
 
     mapper(entities.WishedProduct, wished_product)
+    mapper(User, user)

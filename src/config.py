@@ -22,3 +22,5 @@ def get_api_url():
 PRODUCT_API_BASE_URL = os.environ.get(
     'PRODUCT_API_BASE_URL', 'http://challenge-api.luizalabs.com'
 )
+
+JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')

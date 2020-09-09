@@ -1,4 +1,4 @@
-from tests.functional_tests import api
+from tests.functional_tests.customer import api
 
 
 def test_create_customer_returns_status_created():
