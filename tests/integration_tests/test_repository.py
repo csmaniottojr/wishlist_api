@@ -24,3 +24,20 @@ def test_has_customer_with_email(sqla_memory_session):
 
     assert repo.has_customer_with_email('alice@gmail.com')
     assert not repo.has_customer_with_email('otheralice@gmail.com')
+
+
+def test_delete_wished_product_when_delete_customer(sqla_memory_session):
+    customer = Customer(id=1, name='Alice', email='alice@gmail.com')
+    customer.add_to_wishlist('PRODUCT_UUID')
+
+    repo = SQLACustomerRepository(sqla_memory_session)
+    repo.save(customer)
+    repo.delete(customer)
+
+    assert repo.get_by_id(1) is None
+
+    count_wished = sqla_memory_session.execute(
+        'SELECT count(*) FROM wished_product WHERE customer_id = :id', {'id': 1}
+    ).scalar()
+
+    assert count_wished == 0

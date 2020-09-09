@@ -27,7 +27,9 @@ def start_mappers():
         entities.Customer,
         customer,
         properties={
-            'wishlist': relationship(entities.WishedProduct, collection_class=set)
+            'wishlist': relationship(
+                entities.WishedProduct, cascade='all, delete', collection_class=set
+            )
         },
     )
 
