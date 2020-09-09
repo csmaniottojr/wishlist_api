@@ -1,15 +1,11 @@
-import requests
-
-from src.config import get_api_url
+from tests.functional_tests.wishlist_api import make_api_call
 
 
 def signup(email, password):
-    return requests.post(
-        f'{get_api_url()}/auth/signup', json={'email': email, 'password': password}
-    )
+    payload = {'email': email, 'password': password}
+    return make_api_call('POST', 'auth/signup', payload=payload)
 
 
 def login(email, password):
-    return requests.post(
-        f'{get_api_url()}/auth/login', json={'email': email, 'password': password}
-    )
+    payload = {'email': email, 'password': password}
+    return make_api_call('POST', 'auth/login', payload=payload)

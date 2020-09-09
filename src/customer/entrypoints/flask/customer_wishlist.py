@@ -3,6 +3,7 @@ from http import HTTPStatus
 import marshmallow as ma
 from flask_apispec import doc, marshal_with
 from flask_apispec.views import MethodResource
+from flask_jwt_extended import jwt_required
 
 from src.customer import product_api
 from src.customer.domain import exceptions
@@ -20,11 +21,12 @@ class WishlistResponse(ma.Schema):
     wishlist = ma.fields.List(ma.fields.UUID())
 
 
-@doc(tags=['customers_wishlist'])
+@doc(tags=['customers_wishlist'], security=[{'JWT': []}])
 class CustomerWishlistView(MethodResource):
     @marshal_with(WishlistResponse, code=HTTPStatus.OK, apply=False)
     @marshal_with(ErrorSchema, code=HTTPStatus.NOT_FOUND, apply=False)
     @marshal_with(ErrorSchema, code=HTTPStatus.UNPROCESSABLE_ENTITY, apply=False)
+    @jwt_required
     def post(self, customer_id, product_id):
         session = session_factory()
         repository = SQLACustomerRepository(session)
@@ -47,6 +49,7 @@ class CustomerWishlistView(MethodResource):
         return response, HTTPStatus.CREATED
 
     @marshal_with(WishlistResponse, code=HTTPStatus.OK, apply=False)
+    @jwt_required
     def delete(self, product_id, customer_id):
         session = session_factory()
         repository = SQLACustomerRepository(session)

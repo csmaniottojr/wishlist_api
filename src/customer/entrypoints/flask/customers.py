@@ -3,6 +3,7 @@ from http import HTTPStatus
 from flask import request
 from flask_apispec import doc, marshal_with, use_kwargs
 from flask_apispec.views import MethodResource
+from flask_jwt_extended import jwt_required
 from marshmallow import ValidationError
 
 from src.customer.domain import exceptions
@@ -21,9 +22,10 @@ from src.customer.repository import SQLACustomerRepository
 from src.db import session_factory
 
 
-@doc(tags=['customers'])
+@doc(tags=['customers_wishlist'], security=[{'JWT': []}])
 class CustomersView(MethodResource):
     @marshal_with(ListCustomersResponse(many=True), code=HTTPStatus.OK, apply=False)
+    @jwt_required
     def get(self):
         session = session_factory()
         return list_customers(session)
@@ -31,6 +33,7 @@ class CustomersView(MethodResource):
     @use_kwargs(CreateCustomerRequest, apply=False)
     @marshal_with(CreateCustomerResponse, HTTPStatus.CREATED, apply=False)
     @marshal_with(ErrorSchema, HTTPStatus.UNPROCESSABLE_ENTITY, apply=False)
+    @jwt_required
     def post(self):
         try:
             request_data = CreateCustomerRequest().load(request.json)
