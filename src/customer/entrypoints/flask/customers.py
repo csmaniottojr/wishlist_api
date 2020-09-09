@@ -1,7 +1,7 @@
 from http import HTTPStatus
 
 from flask import request
-from flask_apispec import marshal_with, use_kwargs
+from flask_apispec import doc, marshal_with, use_kwargs
 from flask_apispec.views import MethodResource
 from marshmallow import ValidationError
 
@@ -21,8 +21,9 @@ from src.customer.repository import SQLACustomerRepository
 from src.db import session_factory
 
 
+@doc(tags=['customers'])
 class CustomersView(MethodResource):
-    @marshal_with(ListCustomersResponse(many=True), apply=False)
+    @marshal_with(ListCustomersResponse(many=True), code=HTTPStatus.OK, apply=False)
     def get(self):
         session = session_factory()
         return list_customers(session)
