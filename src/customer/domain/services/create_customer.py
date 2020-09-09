@@ -1,4 +1,4 @@
-from collections import namedtuple
+import marshmallow as ma
 
 from src.customer.domain import entities, exceptions
 
@@ -17,9 +17,15 @@ class CreateCustomer:
 
         self.customer_repository.save(customer)
 
-        return CreateCustomerResponse(
-            id=customer.id, name=customer.name, email=customer.email,
-        )
+        return CreateCustomerResponse().dump(customer)
 
 
-CreateCustomerResponse = namedtuple('CreateCustomerResponse', 'id name email')
+class CreateCustomerRequest(ma.Schema):
+    name = ma.fields.String()
+    email = ma.fields.Email()
+
+
+class CreateCustomerResponse(ma.Schema):
+    id = ma.fields.Integer()
+    name = ma.fields.String()
+    email = ma.fields.Email()

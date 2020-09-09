@@ -1,10 +1,7 @@
 import pytest
 
 from src.customer.domain import exceptions
-from src.customer.domain.services.create_customer import (
-    CreateCustomer,
-    CreateCustomerResponse,
-)
+from src.customer.domain.services.create_customer import CreateCustomer
 from tests.unit_tests.customer.fake_repository import FakeCustomerRepository
 
 
@@ -28,9 +25,11 @@ def test_create_customer_response_dto():
     }
 
     response_dto = service(payload)
-    expected_dto = CreateCustomerResponse(
-        id=None, name='Cesar Smaniotto Júnior', email='cesarsjb@gmail.com'
-    )
+    expected_dto = {
+        'id': None,
+        'name': 'Cesar Smaniotto Júnior',
+        'email': 'cesarsjb@gmail.com',
+    }
     assert response_dto == expected_dto
 
 

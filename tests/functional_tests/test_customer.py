@@ -23,6 +23,26 @@ def test_create_customer_returns_status_created():
     assert response.status_code == 201
 
 
+def test_create_customer_with_invalid_input():
+    payload = {
+        'name': 'Cesar Smaniotto Jr',
+        'email': 'cesarsjb@gmailcom',
+    }
+
+    response = api.create_customer(payload)
+
+    response_json = response.json()
+
+    expected_response = {
+        'code': 'VALIDATION_ERROR',
+        'errors': {'email': ['Not a valid email address.']},
+        'message': 'Validation error',
+    }
+
+    assert response_json == expected_response
+    assert response.status_code == 422
+
+
 def test_create_customer_with_duplicated_email():
     email = 'alice@gmail.com'
     payload = {
