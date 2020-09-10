@@ -14,17 +14,19 @@ from src.orm import start_mappers
 
 def create_app():
     app = Flask(__name__)
-    app.config['DEBUG'] = True
     app.config['JWT_SECRET_KEY'] = JWT_SECRET_KEY
     JWTManager(app)
 
     app.config.update(
         {
             'APISPEC_SPEC': APISpec(
-                title='customers',
+                title='Wishlist API',
                 version='v1',
                 plugins=[MarshmallowPlugin()],
                 openapi_version='2.0.0',
+                info={
+                    'description': 'REST API to manage customers and their wishlists.'
+                },
                 securityDefinitions={
                     'JWT': {'type': 'apiKey', 'in': 'header', 'name': 'Authorization'}
                 },
