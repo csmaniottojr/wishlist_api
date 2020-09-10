@@ -17,7 +17,7 @@ Pre-requisites: Docker, docker-compose and make.
 ```bash
 git clone git@github.com:csmaniottojr/wishlist_api.git
 cd wishlist_api/
-cp .env.example .env # set value for blank envoiroment variables
+cp .env.example .env # set value for blank enviroment variables
 make build
 ```
 
